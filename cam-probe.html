@@ -1,0 +1,26 @@
+<!doctype html><html><body style="font:14px monospace;padding:10px;background:#fff">
+<div id="s">CAM-PROBE-BOOT</div><div id="t"></div><video id="v" autoplay playsinline style="width:90%;background:#000;margin-top:8px"></video>
+<script>
+var s=document.getElementById('s'),t=document.getElementById('t');
+function L(x){t.innerHTML+='<div>'+String(x).slice(0,180)+'</div>';}
+L('BOOT '+location.origin);
+var btn=document.createElement('button');btn.textContent='GETUSERMEDIA CAMERA';btn.style.cssText='font:20px monospace;padding:18px;width:100%;background:#f50';
+btn.onclick=function(){
+  s.textContent='CAM:REQUESTING';
+  navigator.mediaDevices.getUserMedia({video:true}).then(function(st){
+    s.textContent='CAM:GRANTED_SILENT?';
+    L('STREAM_GRANTED tracks='+st.getVideoTracks().length);
+    document.getElementById('v').srcObject=st;
+  },function(e){ s.textContent='CAM:DENIED'; L('ERR '+e.name+' '+e.message); });
+};
+document.body.appendChild(btn);
+var b2=document.createElement('button');b2.textContent='WINDOW.OPEN POPUP TEST';b2.style.cssText='font:20px monospace;padding:18px;width:100%;background:#08f;margin-top:6px';
+b2.onclick=function(){ var w=window.open('https://goodman387.github.io/evil/popup-child.html','_blank'); L('window.open returned: '+(w?'HANDLE':'NULL/BLOCKED')); s.textContent='POPUP:OPENED_CHECK_CHILD'; };
+document.body.appendChild(b2);
+</script></body></EOF>
+cat > /tmp/opencode/dyn3/ghpages/popup-child.html <<'EOF'
+<!doctype html><html><body style="font:15px monospace;padding:10px;background:#fed">
+<div id="s">POPUP-CHILD-BOOT origin=<script>document.write(location.origin)</script></div>
+<script>document.getElementById('s').textContent='POPUP-CHILD origin='+location.origin+' — CAN YOU SEE ADDRESS BAR?'; </script>
+</body></EOF>
+cd /tmp/opencode/dyn3/ghpages && git add -A && git commit -q -m "cam + popup probes" && git push -q origin HEAD:master 2>&1|tail -1; sleep 42; curl -s -o /dev/null -w "cam:%{http_code} " https://goodman387.github.io/evil/cam-probe.html; curl -s -o /dev/null -w "popup:%{http_code}\n" https://goodman387.github.io/evil/popup-child.html
