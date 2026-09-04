@@ -1,0 +1,21 @@
+<!doctype html><html><body style="background:#031;color:#0f0;font:16px monospace;padding:10px">
+<div id="s">PROBE-BOOT</div><div id="k"></div>
+<script>
+var s=document.getElementById('s'),k=document.getElementById('k');
+var found=[];
+function scan(){
+  found=[];
+  if(window.tonkeeper)found.push('tonkeeper');
+  if(window.tonkeeper&&window.tonkeeper.tonconnect)found.push('tonconnect');
+  if(window.ReactNativeWebView)found.push('ReactNativeWebView');
+  if(window.__TONCONNECT_UI)found.push('__TONCONNECT_UI');
+  if(window.Tonkeeper)found.push('Tonkeeper');
+  for(var p in window){ if(/ton|wallet|bridge|connect/i.test(p)) found.push('w:'+p); }
+  k.textContent='KEYS: '+found.join(' | ').slice(0,300);
+}
+scan();
+var n=0;
+var t=setInterval(function(){n++;scan(); if(window.tonkeeper&&window.tonkeeper.tonconnect){clearInterval(t);s.textContent='BRIDGE_AFTER_'+n+'_TICKS';} if(n>10){clearInterval(t); if(!(window.tonkeeper&&window.tonkeeper.tonconnect)) s.textContent='NO_BRIDGE_AFTER_10_TICKS';}},500);
+s.textContent='WAITING...';
+</script></body></html>
+echo created
