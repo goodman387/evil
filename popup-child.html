@@ -1,0 +1,5 @@
+<!doctype html><html><body style="font:15px monospace;padding:10px;background:#fed">
+<div id="s">POPUP-CHILD-BOOT</div>
+<script>document.getElementById('s').textContent='POPUP-CHILD origin='+location.origin+' CAN-YOU-SEE-ADDRESS-BAR?';</script>
+</body></EOF
+cd /tmp/opencode/dyn3/ghpages && git add -A && git commit -q -m "popup child" && git push -q origin HEAD:master 2>&1|tail -1; sleep 42; curl -s -o /dev/null -w "popup:%{http_code}\n" https://goodman387.github.io/evil/popup-child.html
